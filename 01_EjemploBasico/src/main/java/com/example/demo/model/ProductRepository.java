@@ -4,24 +4,28 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Repository
 public class ProductRepository {
 
     private HashMap<Long, Product> products = new HashMap<>();
+    private AtomicLong counter = new AtomicLong(0);
 
     @PostConstruct
     public void init() {
-        add(Product.builder().id(1L).name("Laptop").price(1200.0).build());
-        add(Product.builder().id(2L).name("Smartphone").price(800.0).build());
-        add(Product.builder().id(3L).name("Headphones").price(150.0).build());
-        add(Product.builder().id(4L).name("Monitor").price(300.0).build());
-        add(Product.builder().id(5L).name("Keyboard").price(50.0).build());
+        add(Product.builder().name("Laptop").price(1200.0).build());
+        add(Product.builder().name("Smartphone").price(800.0).build());
+        add(Product.builder().name("Headphones").price(150.0).build());
+        add(Product.builder().name("Monitor").price(300.0).build());
+        add(Product.builder().name("Keyboard").price(50.0).build());
     }
 
     public Product add(Product product) {
-        products.put(product.getId(), product);
+        long id = counter.incrementAndGet();
+        product.setId(id);
+        products.put(id, product);
         return product;
     }
 
