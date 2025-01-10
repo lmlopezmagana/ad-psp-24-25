@@ -1,14 +1,10 @@
 package com.salesianos.data;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
-
 
 @Getter
 @Setter
@@ -20,11 +16,19 @@ import java.util.Objects;
 @Table(name = "productos")
 public class Producto {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
-    private String nombre;
-    private double precio;
+    @Column(length = 512)
+    private String nombreProducto;
+
+    @Column(columnDefinition = "TEXT")
+    private String descripcion;
+
+    @Column(name = "precio")
+    private double precioVenta;
+
 
     @Override
     public final boolean equals(Object o) {
