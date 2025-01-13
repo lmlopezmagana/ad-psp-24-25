@@ -1,11 +1,11 @@
 package com.salesianos.data.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -22,6 +22,10 @@ public class Categoria {
     private Long id;
 
     private String nombre;
+
+    @OneToMany(mappedBy = "categoria", fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<Producto> productos = new ArrayList<>();
 
     @Override
     public final boolean equals(Object o) {

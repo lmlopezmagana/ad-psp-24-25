@@ -21,13 +21,13 @@ public class Producto {
     private Long id;
 
     @Column(length = 512)
-    private String nombreProducto;
+    private String nombre;
 
     @Column(columnDefinition = "TEXT")
     private String descripcion;
 
     @Column(name = "precio")
-    private double precioVenta;
+    private double precio;
 
     @ManyToOne
     @JoinColumn(name = "categoria_id",
