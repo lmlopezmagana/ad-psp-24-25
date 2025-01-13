@@ -1,4 +1,4 @@
-package com.salesianos.data;
+package com.salesianos.data.model;
 
 import jakarta.persistence.*;
 import lombok.*;
