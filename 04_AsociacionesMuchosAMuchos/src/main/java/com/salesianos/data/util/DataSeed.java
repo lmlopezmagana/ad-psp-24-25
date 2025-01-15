@@ -4,6 +4,7 @@ import com.salesianos.data.model.Categoria;
 import com.salesianos.data.model.Producto;
 import com.salesianos.data.repos.CategoriaRepository;
 import com.salesianos.data.repos.ProductoRepository;
+import com.salesianos.data.repos.TagRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -17,12 +18,13 @@ public class DataSeed {
 
     private final ProductoRepository productoRepository;
     private final CategoriaRepository categoriaRepository;
+    private final TagRepository tagRepository;
 
     @PostConstruct
     public void run() {
 
         //Categoria c = categoriaRepository.getReferenceById(1L);
-        Categoria c = null;
+        /*Categoria c = null;
         Optional<Categoria> optionalCategoria = categoriaRepository.findById(1L);
 
         if (optionalCategoria.isPresent()) {
@@ -56,6 +58,11 @@ public class DataSeed {
         productoRepository.findAll()
                 .forEach(System.out::println);
 
+    */
+
+        productoRepository
+                .findAll()
+                .forEach(System.out::println);
 
     }
 
