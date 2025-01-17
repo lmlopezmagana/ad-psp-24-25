@@ -37,7 +37,7 @@ public class Producto {
     //@JsonBackReference
     private Categoria categoria;
 
-    @ManyToMany(/*fetch = FetchType.EAGER*/)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "producto_tag",
             joinColumns = @JoinColumn(name="producto_id"),
             inverseJoinColumns = @JoinColumn(name="tag_id"),
