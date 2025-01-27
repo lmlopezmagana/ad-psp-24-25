@@ -8,30 +8,26 @@ import java.util.Objects;
 
 @Getter
 @Setter
-@ToString
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Entity
-@IdClass(LineaPedidoId.class)
-public class LineaPedido {
+@ToString
+@Table(name = "productos")
+public class Producto {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    @Id
-    @ManyToOne
-    private Pedido pedido;
+    @Column(length = 512)
+    private String nombreProducto;
 
-    @ManyToOne
-    private Producto producto;
+    @Column(columnDefinition = "TEXT")
+    private String descripcion;
 
-    private int cantidad;
-
+    @Column(name = "precio")
     private double precioVenta;
-
-
 
 
     @Override
@@ -41,8 +37,8 @@ public class LineaPedido {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        LineaPedido that = (LineaPedido) o;
-        return getId() != null && Objects.equals(getId(), that.getId());
+        Producto producto = (Producto) o;
+        return getId() != null && Objects.equals(getId(), producto.getId());
     }
 
     @Override
