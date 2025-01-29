@@ -18,4 +18,8 @@ public record GetProductoDto(
         );
     }
 
+    public GetProductoDto(Long id, String nombre, double precio) {
+        this(id, nombre, precio, new GetCategoriaDto(0L, "Sin categoria"));
+    }
+
 }

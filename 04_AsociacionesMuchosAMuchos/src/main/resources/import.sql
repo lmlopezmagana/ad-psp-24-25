@@ -17,6 +17,10 @@ values ('Lorem ipsum dolor sit amet','Botellín fresquito', 1.0, nextval('produc
 insert into producto (descripcion,nombre,precio, id, categoria_id)
 values ('Lorem ipsum dolor sit amet','Tapita de jamón de bellota', 4.20, nextval('producto_seq'), currval('categoria_seq'));
 
+insert into producto (descripcion,nombre,precio, id, categoria_id)
+values ('Lorem ipsum dolor sit amet','Cuenta premium en Copilot', 2.99, nextval('producto_seq'), currval('categoria_seq'));
+
+
 insert into producto_tag (producto_id, tag_id) values (1, 51);
 insert into producto_tag (producto_id, tag_id) values (51, 51);
 insert into producto_tag (producto_id, tag_id) values (51, 1);

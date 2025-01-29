@@ -60,8 +60,14 @@ public class DataSeed {
 
     */
 
+       /* productoRepository
+                //.findAll()
+                .productosConTags(3.0)
+                .forEach(System.out::println);*/
+
         productoRepository
-                .findAll()
+                //.infoBasicaProductosPorTag("Tapeo")
+                .productosPorTag("Tapeo")
                 .forEach(System.out::println);
 
     }
