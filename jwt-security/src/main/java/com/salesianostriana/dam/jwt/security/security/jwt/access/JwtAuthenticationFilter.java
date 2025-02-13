@@ -1,5 +1,6 @@
 package com.salesianostriana.dam.jwt.security.security.jwt.access;
 
+import com.salesianostriana.dam.jwt.security.security.exceptionhandling.JwtException;
 import com.salesianostriana.dam.jwt.security.user.model.User;
 import com.salesianostriana.dam.jwt.security.user.repo.UserRepository;
 import com.salesianostriana.dam.jwt.security.user.service.UserService;
@@ -8,12 +9,15 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -27,6 +31,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final UserRepository userRepository;
     private final JwtService jwtService;
 
+    @Autowired
+    @Qualifier("handlerExceptionResolver")
+    private HandlerExceptionResolver resolver;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
@@ -34,36 +42,38 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // Validar el token
         // Si es válido, autenticar al usuario
+        try {
+            if (StringUtils.hasText(token) && jwtService.validateAccessToken(token)) {
 
-        if (StringUtils.hasText(token) && jwtService.validateAccessToken(token)) {
+                // Obtener el sub del token, que es el ID del usuario
+                // Buscar el usuario por id
+                // Colocar el usuario autenticado en el contexto de seguridad
 
-            // Obtener el sub del token, que es el ID del usuario
-            // Buscar el usuario por id
-            // Colocar el usuario autenticado en el contexto de seguridad
+                UUID id = jwtService.getUserIdFromAccessToken(token);
 
-            UUID id = jwtService.getUserIdFromAccessToken(token);
+                Optional<User> result = userRepository.findById(id);
 
-            Optional<User> result = userRepository.findById(id);
+                if (result.isPresent()) {
+                    User user = result.get();
+                    UsernamePasswordAuthenticationToken
+                            authenticationToken = new UsernamePasswordAuthenticationToken(
+                            user,
+                            null,
+                            user.getAuthorities()
+                    );
 
-            if (result.isPresent()) {
-                User user = result.get();
-                UsernamePasswordAuthenticationToken
-                        authenticationToken = new UsernamePasswordAuthenticationToken(
-                                       user,
-                                       null,
-                                       user.getAuthorities()
-                );
+                    authenticationToken.setDetails(new WebAuthenticationDetails(request));
 
-                authenticationToken.setDetails(new WebAuthenticationDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+                }
 
 
             }
-
-
+        } catch (JwtException ex) {
+            resolver.resolveException(request, response, null, ex);
         }
-
 
 
         filterChain.doFilter(request, response);

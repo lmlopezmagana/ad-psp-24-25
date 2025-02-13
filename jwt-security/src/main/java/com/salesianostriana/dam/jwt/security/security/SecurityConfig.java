@@ -1,5 +1,7 @@
 package com.salesianostriana.dam.jwt.security.security;
 
+import com.salesianostriana.dam.jwt.security.security.exceptionhandling.JwtAccessDeniedHandler;
+import com.salesianostriana.dam.jwt.security.security.exceptionhandling.JwtAuthenticationEntryPoint;
 import com.salesianostriana.dam.jwt.security.security.jwt.access.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +28,8 @@ public class SecurityConfig {
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAuthenticationEntryPoint authenticationEntryPoint;
+    private final JwtAccessDeniedHandler accessDeniedHandler;
 
     @Bean
     AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
@@ -58,8 +62,13 @@ public class SecurityConfig {
         http.cors(Customizer.withDefaults());
         http.sessionManagement((session) -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.exceptionHandling(excepz -> excepz
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .accessDeniedHandler(accessDeniedHandler)
+        );
         http.authorizeHttpRequests(authz -> authz
                 .requestMatchers(HttpMethod.POST, "/auth/register", "/auth/login").permitAll()
+                .requestMatchers("/me/admin").hasRole("ADMIN")
                 .anyRequest().authenticated());
 
 

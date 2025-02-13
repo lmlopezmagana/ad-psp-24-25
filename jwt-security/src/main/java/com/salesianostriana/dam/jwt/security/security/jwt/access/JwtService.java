@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.jwt.security.security.jwt.access;
 
 
+import com.salesianostriana.dam.jwt.security.security.exceptionhandling.JwtException;
 import com.salesianostriana.dam.jwt.security.user.model.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
