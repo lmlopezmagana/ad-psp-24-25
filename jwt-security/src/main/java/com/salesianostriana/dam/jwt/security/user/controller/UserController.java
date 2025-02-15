@@ -4,6 +4,7 @@ import com.salesianostriana.dam.jwt.security.security.jwt.access.JwtService;
 import com.salesianostriana.dam.jwt.security.security.jwt.refresh.RefreshToken;
 import com.salesianostriana.dam.jwt.security.security.jwt.refresh.RefreshTokenRequest;
 import com.salesianostriana.dam.jwt.security.security.jwt.refresh.RefreshTokenService;
+import com.salesianostriana.dam.jwt.security.user.dto.ActivateAccountRequest;
 import com.salesianostriana.dam.jwt.security.user.dto.CreateUserRequest;
 import com.salesianostriana.dam.jwt.security.user.dto.LoginRequest;
 import com.salesianostriana.dam.jwt.security.user.dto.UserResponse;
@@ -73,6 +74,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(refreshTokenService.refreshToken(token));
 
+    }
+
+    @PostMapping("/activate/account/")
+    public ResponseEntity<?> activateAccount(@RequestBody ActivateAccountRequest req) {
+        String token = req.token();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(UserResponse.of(userService.activateAccount(token)));
     }
 
 

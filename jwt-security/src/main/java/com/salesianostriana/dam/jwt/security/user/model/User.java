@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -32,8 +33,18 @@ public class User implements UserDetails {
 
     private String password;
 
+    private String email;
+
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<UserRole> roles;
+
+    @Builder.Default
+    private boolean enabled = false;
+
+    private String activationToken;
+
+    @Builder.Default
+    private Instant createdAt = Instant.now();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

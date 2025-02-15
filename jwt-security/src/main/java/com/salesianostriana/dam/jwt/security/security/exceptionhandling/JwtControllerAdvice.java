@@ -1,5 +1,6 @@
 package com.salesianostriana.dam.jwt.security.security.exceptionhandling;
 
+import com.salesianostriana.dam.jwt.security.user.error.ActivationExpiredException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -56,6 +57,16 @@ public class JwtControllerAdvice extends ResponseEntityExceptionHandler {
 
         return problemDetail;
     }
+
+    @ExceptionHandler(ActivationExpiredException.class)
+    public ProblemDetail handleActivationExpired(ActivationExpiredException ex) {
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
+                ex.getMessage());
+
+        return problemDetail;
+    }
+
 
 
 
