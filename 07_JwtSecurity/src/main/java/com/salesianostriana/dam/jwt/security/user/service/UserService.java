@@ -5,6 +5,7 @@ import com.salesianostriana.dam.jwt.security.user.error.ActivationExpiredExcepti
 import com.salesianostriana.dam.jwt.security.user.model.User;
 import com.salesianostriana.dam.jwt.security.user.model.UserRole;
 import com.salesianostriana.dam.jwt.security.user.repo.UserRepository;
+import com.salesianostriana.dam.jwt.security.util.ResendMailSender;
 import com.salesianostriana.dam.jwt.security.util.SendGridMailSender;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -29,6 +30,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final SendGridMailSender mailSender;
+    //private final ResendMailSender mailSender;
 
 
     @Value("${activation.duration}")
@@ -45,7 +47,7 @@ public class UserService {
 
         try {
             mailSender.sendMail(createUserRequest.email(), "Activación de cuenta", user.getActivationToken());
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"Error al enviar el email de activación");
         }
 

@@ -2,8 +2,13 @@ package com.salesianos.data.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Objects;
 
@@ -35,6 +40,21 @@ public class Producto {
             foreignKey = @ForeignKey(name = "fk_producto_categoria"))
     //@JsonBackReference
     private Categoria categoria;
+
+
+
+    public static Specification<Producto> precioMenorQue(double max) {
+        return (root, query, criteriaBuilder) -> {
+            return criteriaBuilder.lessThanOrEqualTo(root.get("precio"), max);
+        };
+    }
+
+
+    public static Specification<Producto> precioMayorQue(double min) {
+        return (root, query, criteriaBuilder) -> {
+            return criteriaBuilder.greaterThanOrEqualTo(root.get("precio"), min);
+        };
+    }
 
 
     @Override

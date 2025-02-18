@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.salesianostriana.dam</groupId>
-	<artifactId>jwt-security</artifactId>
+	<artifactId>07_JwtSecurity</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>jwt-security</name>
+	<name>07_JwtSecurity</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
@@ -85,6 +85,14 @@
 			<artifactId>sendgrid-java</artifactId>
 			<version>4.10.1</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.resend/resend-java -->
+		<dependency>
+			<groupId>com.resend</groupId>
+			<artifactId>resend-java</artifactId>
+			<version>4.1.1</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
