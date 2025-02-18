@@ -20,7 +20,7 @@ public class DataSeed {
 
     @PostConstruct
     public void run() {
-
+/*
         //Categoria c = categoriaRepository.getReferenceById(1L);
         Categoria c = null;
         Optional<Categoria> optionalCategoria = categoriaRepository.findById(1L);
@@ -54,6 +54,13 @@ public class DataSeed {
 
 
         productoRepository.findAll()
+                .forEach(System.out::println);
+*/
+
+        productoRepository.findAll(Producto.
+                        precioMenorQue(5000).and(
+                                Producto.precioMayorQue(1)
+                        ))
                 .forEach(System.out::println);
 
 
