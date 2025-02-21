@@ -23,7 +23,7 @@ public class FieldsValueMatchValidator implements ConstraintValidator<FieldsValu
                 .forBeanPropertyAccess(o).getPropertyValue(fieldMatch);
 
         if (fieldValue != null)
-            return fieldMatch.equals(fieldValueMatch);
+            return fieldValue.equals(fieldValueMatch);
         else
             return fieldValueMatch == null;
 
