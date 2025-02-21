@@ -2,8 +2,12 @@ package com.salesianos.data.error;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import lombok.Builder;
 import lombok.extern.java.Log;
+import org.hibernate.validator.internal.engine.path.NodeImpl;
+import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.http.*;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -15,6 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @Log
 @RestControllerAdvice
@@ -34,6 +39,23 @@ public class GlobalErrorController
 
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ProblemDetail handleConstraintViolation(ConstraintViolationException ex) {
+        ProblemDetail result = ProblemDetail
+                .forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+
+        List<ApiValidationSubError> subErrors =
+                ex.getConstraintViolations().stream()
+                        .map(ApiValidationSubError::from)
+                        .toList();
+
+        result.setProperty("invalid-params", subErrors);
+
+        return result;
+
+    }
+
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
@@ -41,7 +63,7 @@ public class GlobalErrorController
 
         List<ApiValidationSubError> subErrors =
                 ex.getAllErrors().stream()
-                        .map(ApiValidationSubError::fromError)
+                        .map(ApiValidationSubError::from)
                         .toList();
 
         result.setProperty("invalid-params", subErrors);
@@ -65,7 +87,7 @@ public class GlobalErrorController
             this(object, message, null, null);
         }
 
-        public static ApiValidationSubError fromError(ObjectError error) {
+        public static ApiValidationSubError from(ObjectError error) {
 
             ApiValidationSubError result = null;
 
@@ -86,6 +108,21 @@ public class GlobalErrorController
             return result;
 
 
+        }
+
+        public static ApiValidationSubError from(ConstraintViolation v) {
+            return ApiValidationSubError.builder()
+                    .message(v.getMessage())
+                    .rejectedValue(v.getInvalidValue())
+                    .object(v.getRootBean().getClass().getSimpleName())
+                    .field(
+                            Optional.ofNullable(v.getPropertyPath())
+                                    .map(PathImpl.class::cast)
+                                    .map(PathImpl::getLeafNode)
+                                    .map(NodeImpl::asString)
+                                    .orElse("unknown")
+                    )
+                    .build();
         }
 
 

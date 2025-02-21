@@ -6,9 +6,11 @@ import com.salesianos.data.dto.GetProductoDto;
 import com.salesianos.data.model.Producto;
 import com.salesianos.data.service.ProductoService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/product/")
 @RequiredArgsConstructor
+@Validated
 public class ProductoController {
 
     private final ProductoService productoService;
@@ -30,7 +33,7 @@ public class ProductoController {
 
 
     @GetMapping("/{id}")
-    public Producto getById(@PathVariable Long id) {
+    public Producto getById(@PathVariable @Min(value = 1) Long id) {
         return productoService.findById(id);
     }
 

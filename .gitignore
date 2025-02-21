@@ -65,3 +65,7 @@ target
 secrets.yml
 .gradletasknamecache
 .sts4-cache
+
+
+./**/db/**
+*.db
