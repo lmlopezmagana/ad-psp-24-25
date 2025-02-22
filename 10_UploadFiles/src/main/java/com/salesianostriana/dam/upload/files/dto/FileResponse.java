@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Builder
 public record FileResponse(
+    String id,
     String name,
     String uri,
     String type,

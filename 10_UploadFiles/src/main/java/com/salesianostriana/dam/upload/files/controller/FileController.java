@@ -2,11 +2,11 @@ package com.salesianostriana.dam.upload.files.controller;
 
 import com.salesianostriana.dam.upload.files.dto.FileResponse;
 import com.salesianostriana.dam.upload.files.model.FileMetadata;
-import com.salesianostriana.dam.upload.files.model.LocalFileMetadataImpl;
 import com.salesianostriana.dam.upload.files.service.StorageService;
-import com.salesianostriana.dam.upload.files.utils.MediaTypeUrlResource;
 import com.salesianostriana.dam.upload.files.utils.MimeTypeDetector;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -56,12 +54,13 @@ public class FileController {
 
         String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/download/")
-                .path(fileMetadata.getFilename())
+                .path(fileMetadata.getId())
                 .toUriString();
 
         fileMetadata.setURL(uri);
 
         return FileResponse.builder()
+                .id(fileMetadata.getId())
                 .name(fileMetadata.getFilename())
                 .size(multipartFile.getSize())
                 .type(multipartFile.getContentType())
@@ -70,9 +69,9 @@ public class FileController {
     }
 
 
-    @GetMapping("/download/{filename:.+}")
-    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
-        Resource resource = storageService.loadAsResource(filename);
+    @GetMapping("/download/{id:.+}")
+    public ResponseEntity<Resource> getFile(@PathVariable String id) {
+        Resource resource = storageService.loadAsResource(id);
 
         String mimeType = mimeTypeDetector.getMimeType(resource);
 

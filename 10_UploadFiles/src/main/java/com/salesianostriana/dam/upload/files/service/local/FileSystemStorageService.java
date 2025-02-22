@@ -1,12 +1,13 @@
-package com.salesianostriana.dam.upload.files.service;
+package com.salesianostriana.dam.upload.files.service.local;
 
 import com.salesianostriana.dam.upload.files.exception.StorageException;
 import com.salesianostriana.dam.upload.files.model.FileMetadata;
-import com.salesianostriana.dam.upload.files.model.LocalFileMetadataImpl;
-import com.salesianostriana.dam.upload.files.utils.MediaTypeUrlResource;
+import com.salesianostriana.dam.upload.files.service.StorageService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
@@ -20,10 +21,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.stream.Stream;
 
+@Primary
 @Service
-public class FileSystemStorageService implements StorageService{
+public class FileSystemStorageService implements StorageService {
 
     @Value("${storage.location}")
     private String storageLocation;
@@ -56,8 +57,8 @@ public class FileSystemStorageService implements StorageService{
     public Resource loadAsResource(String filename) {
         try {
             Path file = load(filename);
-            MediaTypeUrlResource resource =
-                    new MediaTypeUrlResource(file.toUri());
+            UrlResource resource =
+                    new UrlResource(file.toUri());
 
             if (resource.exists() && resource.isReadable()) {
                 return resource;
