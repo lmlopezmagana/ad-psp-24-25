@@ -23,6 +23,7 @@ import java.time.temporal.TemporalUnit;
 import java.util.Set;
 import java.util.UUID;
 
+@Log
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -44,6 +45,8 @@ public class UserService {
                 .roles(Set.of(UserRole.USER))
                 .activationToken(generateRandomActivationCode())
                 .build();
+
+        log.info("Activation token %s".formatted(user.getActivationToken()));
 
         try {
             mailSender.sendMail(createUserRequest.email(), "Activación de cuenta", user.getActivationToken());

@@ -67,6 +67,12 @@ public class UserController {
 
     }
 
+    @PostMapping("/auth/logout")
+    public ResponseEntity<?> logout(@AuthenticationPrincipal User user) {
+        refreshTokenService.deleteByUser(user);
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/auth/refresh/token")
     public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest req) {
         String token = req.refreshToken();
@@ -82,6 +88,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(UserResponse.of(userService.activateAccount(token)));
     }
+
 
 
 
