@@ -69,6 +69,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 }
 
+                // El caso de pasar al bloque catch por una excepción, no encadenamos el siguiente filtro
+                filterChain.doFilter(request, response);
 
             }
         } catch (JwtException ex) {
@@ -76,7 +78,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
 
-        filterChain.doFilter(request, response);
+
 
     }
 
